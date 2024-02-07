@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
---primảy
 
+@keyframes moveLeft {
+  from {left: 0.25vw;}
+  to {left: 1.75vw;}
+}
+@keyframes moveRight {
+  from {right: 0.25vw;}
+  to {right: 1.75vw;}
+}
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -23,4 +30,13 @@ body {
   background: url(../public/arrow.png) no-repeat 0 4px;
 	list-style: none;
 	padding-left: 12px;
+}
+
+.moveLeft {
+  animation: moveLeft 2s infinite;
+  animation-direction: alternate;
+}
+.moveRight {
+  animation: moveRight 2s infinite;
+  animation-direction: alternate;
 }

@@ -8,23 +8,15 @@ const inter = Inter({ subsets: ["latin"] });
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useState } from "react";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyC4JL6QYO2K-QP-JBq0cPDA6_goC3pT2i4",
-  authDomain: "csac-418f9.firebaseapp.com",
-  projectId: "csac-418f9",
-  storageBucket: "csac-418f9.appspot.com",
-  messagingSenderId: "115131995367",
-  appId: "1:115131995367:web:fead1748d90f4a98627e42",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+import { useEffect, useState } from "react";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import database from "@/firebase/firestore";
 
 const navList = [
   {
@@ -46,14 +38,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState<String | null>(sessionStorage.getItem("email")??null);
+  const [email, setEmail] = useState<String | null>("");
   const path = usePathname();
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
+  useEffect(() => {
+    setEmail(sessionStorage.getItem("email") ?? null);
+  }, []);
   return (
     <html lang="en">
       <head>
         <title>CSAC Homepage</title>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/flowbite@1.4.5/dist/flowbite.min.css"
+        />
       </head>
       <body className={inter.className}>
         <nav
@@ -76,8 +75,8 @@ export default function RootLayout({
               CSAC
             </span>
           </a>
-          <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-            <div className=" lg:flex-grow" style={{ fontSize: "1.2vw" }}>
+          <div className=" block flex-grow lg:flex lg:items-center lg:w-auto flex">
+            <div className="flex lg:flex-grow" style={{ fontSize: "1.2vw" }}>
               {navList.map((value, index) => (
                 <a
                   href={value.path == "" ? "/" : value.path}
@@ -95,7 +94,11 @@ export default function RootLayout({
           {email && (
             <div className="flex flex-wrap items-center">
               {email}
-              <div className = "rounded-full border-2 border-black border-hidden hover:border-solid p-1" style={{marginLeft: "0.5vw"}} onClick={() => setEmail(null)}>
+              <div
+                className="rounded-full border-2 border-black border-hidden hover:border-solid p-1"
+                style={{ marginLeft: "0.5vw" }}
+                onClick={() => setEmail(null)}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24"
@@ -112,7 +115,9 @@ export default function RootLayout({
         <div
           id="default-modal"
           aria-hidden="false"
-          className={` flex ${email? "hidden":"show"} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+          className={` flex ${
+            email ? "hidden" : "show"
+          } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
           style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
           <div className="relative p-4 w-full max-w-2xl max-h-full">
@@ -150,13 +155,27 @@ export default function RootLayout({
                     onClick={() => {
                       setLoading(true);
                       signInWithPopup(auth, provider)
-                        .then((result) => {
+                        .then(async (result) => {
                           // This gives you a Google Access Token. You can use it to access the Google API.
                           const credential =
                             GoogleAuthProvider.credentialFromResult(result);
                           const token = credential!.accessToken;
                           // The signed-in user info.
                           const user = result.user;
+                          const userRef = doc(database, "users", user.uid);
+                          if (
+                            (await getDoc(userRef)).exists()
+                          )
+                            updateDoc(userRef, {
+                              name: user.displayName,
+                              photoURL: user.photoURL,
+                            });
+                          else
+                            setDoc(userRef, {
+                              email: user.email,
+                              name: user.displayName,
+                              photoURL: user.photoURL,
+                            });
                           // IdP data available using getAdditionalUserInfo(result)
                           // ...
                           sessionStorage.setItem("token", token ?? "");
@@ -201,6 +220,7 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+        <script src="https://unpkg.com/flowbite@1.4.5/dist/flowbite.js"></script>
       </body>
     </html>
   );
