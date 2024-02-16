@@ -173,7 +173,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
               <div className="flex grow flex-col">
                 {projectDetail &&
                   projectDetail.participants.map((value, index) => (
-                    <div className=" flex border-stale-400 w-full whitespace-nowrapspace ">
+                    <div className=" flex border-stale-400 w-full whitespace-nowrap">
                       <div className="h-full flex content-center m-0 flex-wrap self-center">
                         <img
                           src={value.photoURL}
@@ -185,7 +185,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
                         />
                       </div>
                       <p
-                        className=" whitespace-nowrapspace  align-middle h-2 "
+                        className=" whitespace-nowrap overflow-x-hidden h-fit self-center animate-marquee"
                         style={{ fontSize: "1.5vw" }}
                       >{`${value.name} - ${value.email}`}</p>
                     </div>

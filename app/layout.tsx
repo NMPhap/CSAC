@@ -147,6 +147,7 @@ export default function RootLayout({
                       />
                     </svg>
                     <span className="sr-only">Loading...</span>
+                    <div className="w-full h-2"></div>
                   </div>
                 ) : (
                   <button

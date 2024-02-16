@@ -4,21 +4,40 @@
 
 
 @keyframes moveLeft {
-  from {left: 0.25vw;}
-  to {left: 1.75vw;}
+  from {
+    left: 0.25vw;
+  }
+
+  to {
+    left: 1.75vw;
+  }
 }
+
 @keyframes moveRight {
-  from {right: 0.25vw;}
-  to {right: 1.75vw;}
+  from {
+    right: 0.25vw;
+  }
+
+  to {
+    right: 1.75vw;
+  }
 }
+
+@keyframes marquee {
+  from {
+    transform: 'translateX(0%)'
+  }
+
+  to {
+    transform: 'translateX(-100%)';
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -26,17 +45,24 @@ body {
     text-wrap: balance;
   }
 }
+
 .announcement {
   background: url(../public/arrow.png) no-repeat 0 4px;
-	list-style: none;
-	padding-left: 12px;
+  list-style: none;
+  padding-left: 12px;
 }
 
 .moveLeft {
   animation: moveLeft 2s infinite;
   animation-direction: alternate;
 }
+
 .moveRight {
   animation: moveRight 2s infinite;
+  animation-direction: alternate;
+}
+
+.marquee {
+  animation: marquee 2s infinite;
   animation-direction: alternate;
 }
