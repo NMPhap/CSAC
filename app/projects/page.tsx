@@ -11,10 +11,8 @@ import {
   collection,
   getDoc,
   getDocs,
-  getFirestore,
 } from "firebase/firestore";
 import moment from "moment-timezone";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { MouseEvent } from "react";
@@ -194,14 +192,15 @@ export default function Projects() {
                       ? moment(value.startTime).tz("Asia/Bangkok").format("LL")
                       : "Unsettled timeline"}
                   </div>
-                  <div>
-                    {value.participants.map((value, index) => (
+                  <div className="flex">
+                    {value.participants.slice(0,3).map((value, index) => (
                       <img
                         src={value.photoURL}
-                        className="rounded-full w-4"
+                        className="rounded-full w-4 h-4 mr-1"
                         alt="photoURL"
                       />
                     ))}
+                    {value.participants.length > 3 ? "..." : <></>}
                   </div>
                 </div>
               </div>

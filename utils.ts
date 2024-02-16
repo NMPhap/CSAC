@@ -50,3 +50,32 @@ export function search(list: any[] | undefined, field: string, param: any): any[
   });
   return result;
 }
+
+export function loadingFiler(container: HTMLElement | null) {
+  //document: The current HTMl, usage: Create new HTML => Loading Div with spinner
+  //container: The HTML element to put the loading inside,
+  if (!container) container = document.body!;
+
+  var div = document.createElement("div");
+  div.className = "loadingFilter";
+  div.style.backgroundColor = "black";
+  div.style.width = "100%";
+  div.style.height = "100%";
+  div.style.opacity = "0.2";
+  div.style.position = "fixed";
+  div.style.display = "flex";
+  div.style.justifyContent = "center";
+  div.style.alignContent = "center";
+  div.style.flexWrap = "wrap";
+  var spinner = document.createElement("div");
+  spinner.className = "spinner-border";
+  spinner.style.color = "white";
+  div.appendChild(spinner);
+  container.appendChild(div);
+}
+export function removeLoadingFilter(container: HTMLElement | null) {
+  if (!container) container = document.body!;
+  var temp = container.getElementsByClassName("loadingFilter");
+  if (temp.length == 0) return;
+  container.removeChild(temp[0]);
+}

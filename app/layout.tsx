@@ -24,11 +24,11 @@ const navList = [
     title: "Homepage",
   },
   {
-    path: "projects",
+    path: "/projects",
     title: "Project",
   },
   {
-    path: "memories",
+    path: "/memories",
     title: "Memories",
   },
 ];
@@ -179,6 +179,7 @@ export default function RootLayout({
                           // IdP data available using getAdditionalUserInfo(result)
                           // ...
                           sessionStorage.setItem("token", token ?? "");
+                          sessionStorage.setItem("userId", user.uid);
                           if (user.email) {
                             sessionStorage.setItem("email", user.email);
                             setEmail(user.email);
