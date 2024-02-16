@@ -173,12 +173,21 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
               <div className="flex grow flex-col">
                 {projectDetail &&
                   projectDetail.participants.map((value, index) => (
-                    <div className=" flex border-stale-400 w-full ">
-                      <img
-                        src={value.photoURL}
-                        className="w-6 rounded-full mr-1 p-1"
-                      />
-                      <p className="text-md">{`${value.name} - ${value.email}`}</p>
+                    <div className=" flex border-stale-400 w-full whitespace-nowrapspace ">
+                      <div className="h-full flex content-center m-0 flex-wrap self-center">
+                        <img
+                          src={value.photoURL}
+                          className=" rounded-full mr-1 p-1"
+                          style={{
+                            height: "3.5vw",
+                            width: "3.5vw",
+                          }}
+                        />
+                      </div>
+                      <p
+                        className=" whitespace-nowrapspace  align-middle h-2 "
+                        style={{ fontSize: "1.5vw" }}
+                      >{`${value.name} - ${value.email}`}</p>
                     </div>
                   ))}
               </div>
