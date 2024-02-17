@@ -197,12 +197,40 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
               >
                 Danh sach tiet muc
               </h3>
-              {projectDetail?.songs &&
-                projectDetail.songs.map((value, index) => (
-                  <p>
-                    {value.name} {value.performers.map((value, index) => <p>{value.name}</p>)}
-                  </p>
-                ))}
+              <div style={{ paddingTop: "1vw" }}>
+                {projectDetail?.songs &&
+                  projectDetail.songs.map((value, index) => (
+                    <div className="overflow-x-hidden w-full ">
+                      <div
+                        className="marquee"
+                        style={{
+                          display: "inline-flex",
+                          whiteSpace: "nowrap",
+                          fontSize: "1.5vw",
+                          height: "3vw",
+                        }}
+                      >
+                        {`${value.name.toUpperCase()} -\xa0`}{" "}
+                        {value.performers.map((value, index, array) => {
+                          if (index != array.length - 1) {
+                            return (
+                              <p>{`${value.name
+                                .split(" ")
+                                .map(
+                                  (s, index) =>
+                                    s[0].toUpperCase() +
+                                    s.toLowerCase().slice(1)
+                                )
+                                .join(" ")},\xa0`}</p>
+                            );
+                          } else {
+                            return <p>{`${value.name}. `}</p>;
+                          }
+                        })}
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </a>
           </div>
           <div style={{ width: "40%" }}>
