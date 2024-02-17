@@ -25,11 +25,11 @@
 
 @keyframes marquee {
   from {
-    transform: 'translateX(0%)'
+    translate: 0%;
   }
 
   to {
-    transform: 'translateX(-100%)';
+    translate: -20%;
   }
 }
 
@@ -63,6 +63,5 @@ body {
 }
 
 .marquee {
-  animation: marquee 2s infinite;
-  animation-direction: alternate;
+  animation: marquee 5s infinite;
 }

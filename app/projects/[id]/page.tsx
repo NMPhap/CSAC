@@ -88,7 +88,19 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
         });
       }
     });
+
   }, []);
+  //Add Marquee className to p if the email-name is too long
+  useEffect(() => {
+    if(projectDetail)
+    {
+      projectDetail.participants.forEach((element,index) => {
+        const emailText = document.getElementById(`emailText-${index}`);
+        if(emailText && emailText.scrollWidth > emailText.parentElement!.offsetWidth)
+          emailText.className += " marquee";
+      });
+    }
+  },[projectDetail]);
   return (
     <div className="p-5" style={{ height: "500px" }}>
       <div className="relative">
@@ -173,21 +185,24 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
               <div className="flex grow flex-col">
                 {projectDetail &&
                   projectDetail.participants.map((value, index) => (
-                    <div className=" flex border-stale-400 w-full whitespace-nowrap">
+                    <div className=" flex border-stale-400 w-full whitespace-nowrap ">
                       <div className="h-full flex content-center m-0 flex-wrap self-center">
                         <img
                           src={value.photoURL}
                           className=" rounded-full mr-1 p-1"
                           style={{
                             height: "3.5vw",
-                            width: "3.5vw",
+                            minWidth: "fit-content",
                           }}
                         />
                       </div>
-                      <p
-                        className=" whitespace-nowrap overflow-x-hidden h-fit self-center animate-marquee"
-                        style={{ fontSize: "1.5vw" }}
-                      >{`${value.name} - ${value.email}`}</p>
+                      <div className="overflow-x-hidden flex w-full">
+                        <p
+                          id={`emailText-${index}`}
+                          className={`whitespace-nowrap h-fit self-center`}
+                          style={{ fontSize: "1.5vw" }}
+                        >{`${value.name} - ${value.email}`}</p>
+                      </div>
                     </div>
                   ))}
               </div>
