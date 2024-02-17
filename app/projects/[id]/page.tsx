@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { loadingFiler, removeLoadingFilter, search } from "@/utils";
 import { toast } from "react-toastify";
 import ActivityContainer from "@/components/activityContainer";
+import { Song } from "@/models/song";
 async function getActivity(
   activity: DocumentReference
 ): Promise<Activity | Activity[]> {
@@ -45,6 +46,23 @@ async function getActivity(
     } as Activity;
   } else return [];
 }
+async function getSongs(value: DocumentReference) {
+  const song = await getDoc(value);
+  if (song.exists()) {
+    const songData = song.data();
+    let performerList = (songData.performers as DocumentReference[]).flatMap(
+      async (user: DocumentReference, index: any) => {
+        return await getDoc(user).then((userDoc) => {
+          if (userDoc.exists()) return userDoc.data() as User;
+          else return [];
+        });
+      }
+    );
+    const resultPerformerList = await Promise.all(performerList);
+    return { ...songData, performers: resultPerformerList } as Song;
+  } else return [];
+}
+
 export default function ProjectDetail({ params }: { params: { id: string } }) {
   const [projectDetail, setProjectDetail] = useState<
     Project | null | undefined
@@ -54,6 +72,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
       if (value.exists()) {
         const temp = value.data();
         console.log(temp);
+        //Get participants data from DocumentReference
         let participantsList: Promise<User>[] = [];
         if (temp.participants)
           participantsList = temp.participants.flatMap(
@@ -65,6 +84,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
             }
           );
         const resultParticipantList = await Promise.all(participantsList);
+        //Get activity data from DocumentReference
         let activityList: Promise<Activity>[] = [];
         if (temp.activities)
           activityList = temp.activities.flatMap(
@@ -74,6 +94,16 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
           );
         const resultActivityList = await Promise.all(activityList);
         console.log(resultActivityList);
+        //Get songs data from DocumentReference
+        let songList: Promise<Song>[] = [];
+        if (temp.songs)
+          songList = temp.songs.flatMap(
+            async (value: DocumentReference, index: any) => {
+              return await getSongs(value);
+            }
+          );
+        const songs = await Promise.all(songList);
+        console.log(songs);
         setProjectDetail({
           name: temp.name,
           id: value.id,
@@ -85,24 +115,26 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
             : undefined,
           participants: resultParticipantList,
           activities: resultActivityList,
+          songs: songs,
         });
       }
     });
-
   }, []);
   //Add Marquee className to p if the email-name is too long
   useEffect(() => {
-    if(projectDetail)
-    {
-      projectDetail.participants.forEach((element,index) => {
+    if (projectDetail) {
+      projectDetail.participants.forEach((element, index) => {
         const emailText = document.getElementById(`emailText-${index}`);
-        if(emailText && emailText.scrollWidth > emailText.parentElement!.offsetWidth)
+        if (
+          emailText &&
+          emailText.scrollWidth > emailText.parentElement!.offsetWidth
+        )
           emailText.className += " marquee";
       });
     }
-  },[projectDetail]);
+  }, [projectDetail]);
   return (
-    <div className="p-5" style={{ height: "500px" }}>
+    <div className="p-5">
       <div className="relative">
         <h1 className="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           {projectDetail?.name}
@@ -165,6 +197,12 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
               >
                 Danh sach tiet muc
               </h3>
+              {projectDetail?.songs &&
+                projectDetail.songs.map((value, index) => (
+                  <p>
+                    {value.name} {value.performers.map((value, index) => <p>{value.name}</p>)}
+                  </p>
+                ))}
             </a>
           </div>
           <div style={{ width: "40%" }}>
@@ -196,7 +234,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
                           }}
                         />
                       </div>
-                      <div className="overflow-x-hidden flex w-full">
+                      <div className="flex w-full overflow-x-hidden">
                         <p
                           id={`emailText-${index}`}
                           className={`whitespace-nowrap h-fit self-center`}

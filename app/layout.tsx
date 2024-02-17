@@ -111,7 +111,8 @@ export default function RootLayout({
             </div>
           )}
         </nav>
-        {children}
+        <div className="mb-10">{children}</div>
+
         <div
           id="default-modal"
           aria-hidden="false"
@@ -147,7 +148,6 @@ export default function RootLayout({
                       />
                     </svg>
                     <span className="sr-only">Loading...</span>
-                    <div className="w-full h-2"></div>
                   </div>
                 ) : (
                   <button
@@ -164,9 +164,7 @@ export default function RootLayout({
                           // The signed-in user info.
                           const user = result.user;
                           const userRef = doc(database, "users", user.uid);
-                          if (
-                            (await getDoc(userRef)).exists()
-                          )
+                          if ((await getDoc(userRef)).exists())
                             updateDoc(userRef, {
                               name: user.displayName,
                               photoURL: user.photoURL,

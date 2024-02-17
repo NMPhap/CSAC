@@ -1,4 +1,5 @@
 import { Activity } from "./activity";
+import { Song } from "./song";
 import { User } from "./user";
 
 export interface Project {
@@ -8,5 +9,6 @@ export interface Project {
     endTime?: Date;
     status?: string;
     participants: Array<User>,
-    activities?: Array<Activity>
+    activities?: Array<Activity>,
+    songs?: Array<Song>
 }

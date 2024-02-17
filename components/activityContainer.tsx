@@ -14,24 +14,27 @@ export default function ActivityContainer({
     <div className={`p-2 rounded-md mb-2 `}>
       <div className="flex justify-between">
         <div className="flex">
-          {activity.subtask && activity.subtask.length > 0 ?           <motion.div
-            initial={false}
-            animate={{
-              rotate: isOpen ? "0deg" : "-90deg",
-            }}
-          >
-            <svg
+          {activity.subtask && activity.subtask.length > 0 ? (
+            <motion.svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.5vw"
               viewBox="0 -960 960 960"
               width="1.5vw"
+              initial={{height: "fit-content"}}
+              animate={{
+                rotate: isOpen ? "0deg" : "-90deg",
+              }}
             >
               <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-            </svg>
-          </motion.div>: <></>}
+            </motion.svg>
+          ) : (
+            <></>
+          )}
 
-
-          <h5 className="font-semibold cursor-pointer hover:underline" onClick={() => setIsOpen(!isOpen)}>
+          <h5
+            className="font-semibold cursor-pointer hover:underline"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             {" "}
             {activity.name}
           </h5>
